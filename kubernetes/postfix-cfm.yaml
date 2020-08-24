@@ -1,0 +1,87 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postfix-conf
+  namespace: postfix
+data:
+  transport: |
+    @YOUR_DOMAIN
+    *              discard:
+  virtual: |t
+    @YOUR_DOMAINs your@email.tld
+  header_checks: |
+    /^Received:.*with ESMTPSA/              IGNORE
+    /^X-Originating-IP:/    IGNORE
+    /^X-Mailer:/            IGNORE
+    /^User-Agent:.*/ 	IGNORE
+  main.cf: |
+    queue_directory = /var/spool/postfix
+    daemon_directory = /usr/lib/postfix/sbin
+    command_directory = /usr/sbin
+    data_directory = /var/lib/postfix
+    mail_owner = postfix
+    myhostname = YOUR_PTR_RECORD
+    mydomain = YOUR_DOMAIN
+    inet_interfaces = all
+    inet_protocols = ipv4
+    mydestination = $myhostname, localhost.$mydomain, localhost
+    unknown_local_recipient_reject_code = 550
+    alias_maps = hash:/etc/aliases
+    alias_database = hash:/etc/aliases
+    debug_peer_level = 2
+    debugger_command =
+     	PATH=/bin:/usr/bin:/usr/local/bin:/usr/X11R6/bin
+     	ddd $daemon_directory/$process_name $process_id & sleep 5
+    sendmail_path = /usr/sbin/sendmail.postfix
+    newaliases_path = /usr/bin/newaliases.postfix
+    mailq_path = /usr/bin/mailq.postfix
+    setgid_group = postdrop
+    html_directory = no
+    manpage_directory = /usr/share/man
+    sample_directory = /usr/share/doc/postfix-2.6.6/samples
+    readme_directory = /usr/share/doc/postfix-2.6.6/README_FILES
+    virtual_alias_domains = YOUR_DOMAIN
+    virtual_alias_maps = hash:/etc/postfix/virtual
+    smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination
+    transport_maps = hash:/etc/postfix/transport
+    smtpd_milters = inet:127.0.0.1:8891
+    non_smtpd_milters = $smtpd_milters
+    milter_default_action = accept
+    tls_random_source = dev:/dev/urandom
+    smtp_tls_CApath = /etc/ssl/certs
+    smtp_tls_security_level = may
+    smtpd_tls_security_level = may
+    smtpd_tls_cert_file = /etc/postfix/tls/ca.crt
+    smtpd_tls_key_file = /etc/postfix/tls/ca.key
+    smtpd_tls_loglevel = 1
+    mime_header_checks = regexp:/etc/postfix/header_checks
+    header_checks = regexp:/etc/postfix/header_checks
+  opendkim.conf: |
+    PidFile	/var/run/opendkim/opendkim.pid
+    Mode	sv
+    Syslog	yes
+    SyslogSuccess	yes
+    LogWhy	yes
+    UserID	opendkim:opendkim
+    Socket	inet:8891@127.0.0.1
+    Umask	002
+    SendReports	yes
+    SoftwareHeader	yes
+    Canonicalization	relaxed/relaxed
+    Domain	YOUR_DOMAIN
+    Selector	YOUR_DOMAIN_third_only
+    MinimumKeyBits	1024
+    KeyTable	/etc/opendkim/KeyTable
+    SigningTable	refile:/etc/opendkim/SigningTable
+    ExternalIgnoreList	refile:/etc/opendkim/TrustedHosts
+    InternalHosts	refile:/etc/opendkim/TrustedHosts
+    OversignHeaders	From
+  KeyTable: |
+    YOUR_DOMAIN_third_only._domainkey.YOUR_DOMAIN YOUR_DOMAIN:YOUR_DOMAIN_third_only:/etc/mail/dkim-k8s/keys/YOUR_DOMAIN/YOUR_DOMAIN.private
+  SigningTable: |
+    *@YOUR_DOMAIN YOUR_DOMAIN_third_only._domainkey.YOUR_DOMAIN
+  TrustedHosts: |
+    127.0.0.1
+    ::1
+    YOUR_DOMAIN
+    0.0.0.0/0

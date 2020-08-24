@@ -1,0 +1,130 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postfix
+  namespace: postfix
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: postfix
+  template:
+    metadata:
+      labels:
+        app: postfix
+    spec:
+      containers:
+      - name: postfix
+        image: lgirardi/kubernetes-postfix:v0.1
+        lifecycle:
+          postStart:
+            exec:
+              command: [ "bin/bash", "-c", "postmap /etc/postfix/virtual && postmap /etc/postfix/transport && supervisorctl restart postfix" ]
+        securityContext:
+          capabilities:
+            drop:
+            - ALL
+            add:
+            - DAC_OVERRIDE
+            - FOWNER
+            - SETUID
+            - SETGID
+            - NET_BIND_SERVICE
+        ports:
+        - name: smtp
+          containerPort: 25
+        volumeMounts:
+        - name: opendkim-key
+          mountPath: /etc/mail/dkim-k8s/keys/YOUR_DOMAIN/YOUR_DOMAIN.private
+          subPath: opendkim-key
+        - name: ca-crt
+          mountPath: /etc/postfix/tls/ca.crt
+          subPath: ca-crt
+        - name: ca-key
+          mountPath: /etc/postfix/tls/ca.key
+          subPath: ca-key
+        - name: postfix-transport
+          mountPath: /etc/postfix/transport
+          subPath: transport
+        - name: postfix-virtual
+          mountPath: /etc/postfix/virtual
+          subPath: virtual
+        - name: postfix-headerchecks
+          mountPath: /etc/postfix/header_checks
+          subPath: header_checks
+        - name: postfix-maincf
+          mountPath: /etc/postfix/main.cf
+          subPath: main.cf
+        - name: postfix-opendkimconf
+          mountPath: /etc/opendkim.conf
+          subPath: opendkim.conf
+        - name: postfix-keytable
+          mountPath: /etc/opendkim/KeyTable
+          subPath: KeyTable
+        - name: postfix-signingtable
+          mountPath: /etc/opendkim/SigningTable
+          subPath: SigningTable
+        - name: postfix-trustedhosts
+          mountPath: /etc/opendkim/TrustedHosts
+          subPath: TrustedHosts
+      volumes:
+        - name: postfix-transport
+          configMap:
+            name: postfix-conf
+            items:
+            - key: transport
+              path: transport
+        - name: postfix-virtual
+          configMap:
+            name: postfix-conf
+            items:
+            - key: virtual
+              path: virtual
+        - name: postfix-headerchecks
+          configMap:
+            name: postfix-conf
+            items:
+            - key: header_checks
+              path: header_checks
+        - name: postfix-maincf
+          configMap:
+            name: postfix-conf
+            items:
+            - key: main.cf
+              path: main.cf
+        - name: postfix-opendkimconf
+          configMap:
+            name: postfix-conf
+            items:
+            - key: opendkim.conf
+              path: opendkim.conf
+        - name: postfix-keytable
+          configMap:
+            name: postfix-conf
+            items:
+            - key: KeyTable
+              path: KeyTable
+        - name: postfix-signingtable
+          configMap:
+            name: postfix-conf
+            items:
+            - key: SigningTable
+              path: SigningTable
+        - name: postfix-trustedhosts
+          configMap:
+            name: postfix-conf
+            items:
+            - key: TrustedHosts
+              path: TrustedHosts
+        - name: opendkim-key
+          secret:
+            secretName: postfix-secret
+        - name: ca-crt
+          secret:
+            secretName: postfix-secret
+        - name: ca-key
+          secret:
+            secretName: postfix-secret

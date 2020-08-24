@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: postfix
+  name: postfix-service
+spec:
+  selector:
+    app: postfix
+  ports:
+  - name: isakmp-udp
+    protocol: UDP
+    nodePort: 30025
+    port: 25
+    targetPort: 25
+  type: NodePort
