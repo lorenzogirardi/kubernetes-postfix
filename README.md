@@ -24,6 +24,7 @@ email answer engagement and each isp is using a different threashold to mark you
 however now we will focus only on the generic configuration with some minimum requirements.  
 
 Here some topic that you probably know:  
+- TLS (add an encrypted connection in delivery)
 - Sender-Id (mostly used for microsoft ecosystem)
 - PTR record (used to check the corrispondence of a real smtp)
 - SPF record (used on TXT level to define an whitelist of "smtp allowed to ...")  
@@ -67,6 +68,7 @@ you can build an image for each dedicate purpose
 - postfix
 - rsyslog
 - opendkim
+- tls
 
 ### Scenario 2:  
 looking the configuration adopted in *Scenario 1* , you can add an ingress tcp forward where  
