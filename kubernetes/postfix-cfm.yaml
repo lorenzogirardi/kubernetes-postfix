@@ -15,6 +15,7 @@ data:
     /^X-Mailer:/            IGNORE
     /^User-Agent:.*/ 	IGNORE
   main.cf: |
+    compatibility_level=2
     queue_directory = /var/spool/postfix
     daemon_directory = /usr/lib/postfix/sbin
     command_directory = /usr/sbin
