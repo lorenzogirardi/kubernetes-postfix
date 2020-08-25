@@ -26,17 +26,11 @@ service postfix start
 tail -f /var/log/mail.log
 EOF
 chmod +x /opt/postfix.sh
-postconf -F '*/*/chroot = n'
-
 
 
 #############
 #  opendkim
 #############
-
-if [[ -z "$(find /etc/opendkim/domainkeys -iname *.private)" ]]; then
-  exit 0
-fi
 cat >> /etc/supervisor/conf.d/supervisord.conf <<EOF
 
 [program:opendkim]
