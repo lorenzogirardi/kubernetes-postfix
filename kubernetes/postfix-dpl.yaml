@@ -32,7 +32,7 @@ spec:
           containerPort: 25
         volumeMounts:
         - name: opendkim-key
-          mountPath: /etc/mail/dkim-k8s/keys/k8s.it/tower.private
+          mountPath: /etc/mail/dkim-k8s/keys/YOUR_DOMAIN/YOUR_DOMAIN.private
           subPath: opendkim-key
         - name: ca-crt
           mountPath: /etc/postfix/tls/ca.crt
