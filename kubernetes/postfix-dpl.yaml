@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: postfix
-        image: lgirardi/kubernetes-postfix:v0.1
+        image: lgirardi/kubernetes-postfix:latest
         lifecycle:
           postStart:
             exec:
