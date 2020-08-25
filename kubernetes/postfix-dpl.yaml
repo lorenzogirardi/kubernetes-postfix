@@ -18,27 +18,21 @@ spec:
     spec:
       containers:
       - name: postfix
-        image: lgirardi/kubernetes-postfix:v0.2
+        image: lgirardi/kubernetes-postfix:latest
         lifecycle:
           postStart:
             exec:
               command: [ "bin/bash", "-c", "postmap /etc/postfix/virtual && postmap /etc/postfix/transport && supervisorctl restart postfix" ]
         securityContext:
           capabilities:
-            drop:
-            - ALL
             add:
-            - DAC_OVERRIDE
-            - FOWNER
-            - SETUID
-            - SETGID
-            - NET_BIND_SERVICE
+            - NET_ADMIN
         ports:
         - name: smtp
           containerPort: 25
         volumeMounts:
         - name: opendkim-key
-          mountPath: /etc/mail/dkim-k8s/keys/YOUR_DOMAIN/YOUR_DOMAIN.private
+          mountPath: /etc/mail/dkim-k8s/keys/k8s.it/tower.private
           subPath: opendkim-key
         - name: ca-crt
           mountPath: /etc/postfix/tls/ca.crt
