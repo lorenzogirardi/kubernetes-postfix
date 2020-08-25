@@ -259,6 +259,8 @@ You can change this aspect , is mostly related to the infrastructure where you f
 and the company CI/CD  
 
 
+__**Remember to ADD your right values inside secrets and configmap where you have CAPS like ```YOUR_DOMAIN```**__  
+
 
 running the *apply* on kubernetes folder you will have the pod running  
 ```postfix        postfix-7d664f786c-rmf54                   1/1     Running   0          29m```
