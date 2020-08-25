@@ -7,7 +7,7 @@ data:
   transport: |
     @YOUR_DOMAIN
     *              discard:
-  virtual: |t
+  virtual: |
     @YOUR_DOMAINs your@email.tld
   header_checks: |
     /^Received:.*with ESMTPSA/              IGNORE
