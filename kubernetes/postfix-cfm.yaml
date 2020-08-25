@@ -66,6 +66,7 @@ data:
     UserID	opendkim:opendkim
     Socket	inet:8891@127.0.0.1
     Umask	002
+    RequireSafeKeys false
     SendReports	yes
     SoftwareHeader	yes
     Canonicalization	relaxed/relaxed
