@@ -1,11 +1,11 @@
 # kubernetes-postfix
 
 
-Long story short my vps provider changed tha ammount for the small instance from 1$ to 3$   
+Long story short my vps provider changed the ammount for the small instance from 1$ to 3$,   
 so i took the advantage to switch my postfix service from cloud to onprem.  
 
 Why, since the world is moving to cloud ?  
-Because my own domain is used just for alerting and small other stuff and 3$ month is creazy :)  
+Because my own domain is used just for alerting and small other stuff and 3$ month is crazy :)  
 Anyway i'll lost some good stuff like static ip and possibility ti have a ptr dns.   
 Shit happens it's just for my stuff.   
 
@@ -18,7 +18,7 @@ However we have 3 different topics to describe in this project
   
   
 ## what is an email 
-send email sometimes is a dedicated work in an enterprise company.  
+Send email sometimes is a dedicated work in an enterprise company.  
 There are many aspect to consider , not only infrastructure , like che segmentation of domains strategy,  
 email answer engagement and each isp is using a different threashold to mark your email as a spam,  
 however now we will focus only on the generic configuration with some minimum requirements.  
@@ -277,7 +277,7 @@ The  ```key data is not secure``` just a working because i've enabled this optio
 but the certificate is applied ``` opendkim[22]: 91E522A000C: DKIM-Signature field added```   
 
 
-Last one is the check on the client side with the righ option enabled  
+Last one is the check on the client side with the righ options enabled  
 
 ![clientemail](https://res.cloudinary.com/ethzero/image/upload/v1598368835/misc/emailoption.png "clientemail")  
 
