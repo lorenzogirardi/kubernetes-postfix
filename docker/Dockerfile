@@ -3,7 +3,7 @@ MAINTAINER lgirardi <l@k8s.it>
 
 EXPOSE 25/tcp
 
-RUN apt-get -y update && apt-get -yq install \
+RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get --no-install-recommends -y install \
 	postfix \
 	bsd-mailx \
 	opendkim \
